@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:chatapp/components/MyButton.dart';
 import 'package:chatapp/components/MyTextFiled.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../services/auth/AuthServices.dart';
 
 class RegisterPage extends StatefulWidget {
-
   final void Function()? onTap;
+
   const RegisterPage({super.key, required this.onTap});
 
   @override
@@ -15,29 +18,40 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPassword = TextEditingController();
+  final nameController = TextEditingController();
+  final picker = ImagePicker();
+  late XFile? imageFile = null;
+
+  void takePic() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = pickedFile;
+      });
+    }
+  }
 
   void registerUser() async {
-    if(passwordController.text != confirmPassword.text){
+    if (passwordController.text != confirmPassword.text) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:  Text(
-            "Password do not  match!",
-          )));
+          content: Text(
+        "Password do not  match!",
+      )));
       return;
     }
 
     final authService = Provider.of<AuthServices>(context, listen: false);
     try {
-      await authService.singOutWithEmailPassword(
-          emailController.text, passwordController.text);
+      await authService.singUpWithEmailPassword(nameController.text,
+          emailController.text, passwordController.text, imageFile!);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            e.toString(),
-          )));
+        e.toString(),
+      )));
     }
   }
 
@@ -51,11 +65,43 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Center(
             child: Column(
               children: [
-                Icon(Icons.app_registration, size: 80, color: Colors.orangeAccent),
+                const SizedBox(
+                  height: 25,
+                ),
+                GestureDetector(
+                  onTap: takePic,
+                  child: imageFile != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          // Adjust the radius as needed
+                          child: Image.file(
+                            File(
+                                imageFile!.path), // Replace with your image URL
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.camera,
+                          size: 120,
+                        ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
                 const Text("Let`s create an account with us",
                     style: TextStyle(fontSize: 16)),
                 const SizedBox(
                   height: 25,
+                ),
+                MyTextFiled(
+                  controller: nameController,
+                  hintText: "Full Name",
+                  obscuredText: false,
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 MyTextFiled(
                   controller: emailController,

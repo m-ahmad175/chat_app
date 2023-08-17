@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  //var  userInfo = UserDataInfo("", "", "", "");
+
   void signIn() async {
     final authService = Provider.of<AuthServices>(context, listen: false);
     try {
