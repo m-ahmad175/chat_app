@@ -1,10 +1,10 @@
-import 'package:chatapp/pages/ChatPage.dart';
+import 'package:chatapp/pages/chat/ChatPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../services/auth/AuthServices.dart';
+import '../../services/auth/AuthServices.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

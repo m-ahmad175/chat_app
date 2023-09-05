@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
             child: Column(
               children: [
-                Icon(Icons.login, size: 80, color: Colors.orangeAccent),
+                const Icon(Icons.login, size: 80, color: Colors.orangeAccent),
                 const Text("Login to connect with others",
                     style: TextStyle(fontSize: 16)),
                 const SizedBox(
